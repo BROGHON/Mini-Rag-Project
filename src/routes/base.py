@@ -1,5 +1,4 @@
 from fastapi import FastAPI, APIRouter, Depends
-from dotenv import load_dotenv
 import os
 from helpers.config import get_settings, Settings
 

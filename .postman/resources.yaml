@@ -1,0 +1,10 @@
+workspace:
+  id: 30c6dbc9-1b03-480c-8084-68df33a90a43
+cloudResources:
+  globals:
+    ../postman/globals/workspace.globals.yaml: c550ced3-c361-4e47-87ab-2677d4e86fa4
+  collections:
+    ../postman/collections/mini-RAG API: 58355040-16cb630b-6dd2-47c3-8dde-42389f790e77
+  environments:
+    ../postman/environments/Environment 1.environment.yaml: 58355040-b0635cab-dd2d-4751-afde-192d3bcee797
+    ../postman/environments/New Environment.environment.yaml: 58355040-bf92ab54-06af-4676-809c-d29cfc592d73

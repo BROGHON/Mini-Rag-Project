@@ -1,0 +1,24 @@
+$kind: http-request
+method: GET
+url: "{{baseUrl}}/api/v1/"
+description: Returns the app name and version from settings.
+order: 1000
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Response contains app_name", function () {
+          const json = pm.response.json();
+          pm.expect(json).to.have.property("app_name");
+          pm.expect(json.app_name).to.be.a("string").and.not.empty;
+      });
+
+      pm.test("Response contains app_version", function () {
+          const json = pm.response.json();
+          pm.expect(json).to.have.property("app_version");
+          pm.expect(json.app_version).to.be.a("string").and.not.empty;
+      });
+    language: text/javascript

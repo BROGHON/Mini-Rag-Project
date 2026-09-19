@@ -1,0 +1,22 @@
+$kind: http-request
+method: POST
+url: "{{baseUrl}}/api/v1/data/upload/1"
+description: Upload a file for a specific project. The file is validated for allowed types and max size.
+order: 1000
+body:
+  type: formdata
+  content:
+    - type: file
+      key: file
+      src: X:/Ai/Projects_folder/mymini-Rag-Project/src/assets/test-upload.txt
+scripts:
+  - type: afterResponse
+    code: |
+      pm.test("Status code is 200", function () {
+          pm.response.to.have.status(200);
+      });
+
+      pm.test("Response indicates file is valid", function () {
+          var jsonData = pm.response.json();
+          pm.expect(jsonData).to.equal(true);
+      });

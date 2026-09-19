@@ -9,9 +9,12 @@ data_router = APIRouter(
 )
 
 
-@data_router.post("/upload/{project_id}")
+@data_router.post("/upload/{project_id}") #tent
 async def upload_data(project_id: str,file: UploadFile,
                         app_settings: Settings = Depends(get_settings)):
-    is_valid = DataController().validate_uploaded_file(file=file)
+    
+    is_valid, result_signal = DataController().validate_uploaded_file(file=file)
 
-    return is_valid
+    return {
+        "signal": result_signal
+    }

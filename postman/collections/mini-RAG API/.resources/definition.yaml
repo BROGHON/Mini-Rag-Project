@@ -1,0 +1,5 @@
+$kind: collection
+description: Collection for the mini RAG (Retrieval-Augmented Generation) FastAPI project
+variables:
+  baseUrl: http://localhost:8000
+  project_id: my-project

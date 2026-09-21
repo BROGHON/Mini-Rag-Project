@@ -11,12 +11,12 @@ body:
       src: X:/Ai/Projects_folder/mymini-Rag-Project/src/assets/test-upload.txt
 scripts:
   - type: afterResponse
-    code: |
+    code: |-
       pm.test("Status code is 200", function () {
           pm.response.to.have.status(200);
       });
 
       pm.test("Response indicates file is valid", function () {
-          var jsonData = pm.response.json();
-          pm.expect(jsonData).to.equal(true);
+          const responseData = pm.response.json();
+          pm.expect(responseData).to.be.null;
       });

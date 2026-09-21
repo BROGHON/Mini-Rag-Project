@@ -1,1 +1,43 @@
 This is a test file for the mini-RAG API upload endpoint. 
+You can train and use a transformer model to predict the next token in a
+sequence where the sequence is coordinates of vertices on a 3D mesh surface.
+Such a generative model can produce 3D geometries by predicting the next set
+of vertices and faces within a 3D space that form the desired geometry.
+However, the geometry would require thousands of vertices and faces to achieve
+a smooth surface.
+This means for each 3D object, you need to wait for a long time for the
+generation to complete, and the results may still remain low fidelity. Because of
+this, the most capable models (i.e., OpenAI’s Shap-E) in producing 3D geometry
+train functions (with many parameters) to implicitly define surfaces and volumes
+in a 3D space.
+Implicit functions are useful for creating smooth surfaces or handling intricate
+details that are challenging for discrete representations like meshes. A trained
+model can consist of an encoder that maps patterns to an implicit function.
+Instead of explicitly generating sequences of vertices and faces for a mesh,
+conditional 3D models can evaluate the trained implicit functions across a
+continuous 3D space. As a result, the generation process has a high degree of
+freedom, control, and flexibility in producing high-fidelity outputs, becoming
+suitable for applications that require detailed and intricate 3D geometries.
+Once the model’s encoder is trained to produce implicit functions, it leverages
+the neural radiance fields (NeRF) rendering technique, as part of the decoder, to
+construct 3D scenes. NeRF maps a pair of inputs—a 3D spatial coordinate and a
+3D viewing direction—to an output consisting of an object density and RGB
+color via the implicit functions. To synthesize new views in a 3D scene, the
+NeRF method considers the viewport as a matrix of rays. Each pixel
+corresponding to a ray, originates from the camera position, and then extends in
+the viewing direction. The color of each ray and associated pixel is computed by
+evaluating the implicit function along the ray and integrating the results to
+calculate the RGB color.
+Once the 3D scene is computed, signed distance functions (SDFs) are used to
+generate meshes, or wireframes of 3D objects by calculating the distance and
+color of any point to the nearest surface of the 3D object. Think of SDFs as a
+way to describe a 3D object by telling you how far away every point in space is
+from the object’s surface. This function gives a number for each point: if the
+point is inside the object, the number is negative; if it’s on the surface, the
+number is zero; and if it’s outside, the number is positive. The surface of the
+object is where all points have the number zero. SDFs help to turn this
+information into a 3D mesh.
+Despite the use of implicit functions, the quality of outputs is still inferior to
+human-created 3D assets and may feel cartoonish. However, with 3D GenAI
+models, you can generate the initial 3D geometries to iterate over concepts and
+refine 3D assets quickly.

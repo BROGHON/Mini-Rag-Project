@@ -6,9 +6,12 @@ services:
       - "27007:27017"
 
     volumes:
-      - ./mongodb:/data/db
+      - mongodb_data:/data/db
 
     restart: always
+
+volumes:
+  mongodb_data:
 
 networks:
   backend:

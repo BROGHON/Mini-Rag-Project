@@ -8,6 +8,8 @@ from models import ResponseSignal
 import logging
 from .schemas.data import processRequest
 from models.ProjectModel import ProjectModel
+from models.ChunkModel import ChunkModel
+from models.db_schemes import DataChunk
 
 logger = logging.getLogger('uvicorn.error')
 
@@ -42,7 +44,9 @@ async def upload_data(request:Request, project_id: str,file: UploadFile,
             }
         )
 
-    project_dir_path = ProjectController().get_project_path(project_id=project_id)
+    project_dir_path = ProjectController().get_project_path(
+            project_id=project_id
+        )
     file_path, file_id = data_controller.generate_unique_filepath(
         orig_file_name=file.filename,
         project_id=project_id
@@ -67,17 +71,28 @@ async def upload_data(request:Request, project_id: str,file: UploadFile,
             content={
                 "signal": ResponseSignal.FILE_UPLOADED_SUCCESS.value,
                 "file_id":file_id,
-                "project_id": str(project._id)
-
             }
         )
 
 @data_router.post("/process/{project_id}")
-async def process_endpoint(project_id: str, process_request: processRequest):
+async def process_endpoint(
+    request:Request,
+    project_id: str, 
+    process_request: processRequest
+):
 
     file_id = process_request.file_id
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size
+
+    project_model = ProjectModel(
+        db_client=request.app.db_client
+    )
+
+    project = await project_model.get_project_or_create_one(
+        project_id=project_id
+    )
+
 
     process_controller = ProcessController(project_id=project_id)
 
@@ -97,4 +112,23 @@ async def process_endpoint(project_id: str, process_request: processRequest):
                 "signal": ResponseSignal.PROCESSING_FAILED.value
             }
         )
-    return file_chunks
+    file_chunks_records = [
+
+        DataChunk(
+            chunk_text= chunk.page_content,
+            chunk_metadata= chunk.metadata,
+            chunk_order=i +1,
+            chunk_project_id=project.id, 
+
+        )
+
+        for chunk in enumerate(file_chunks)
+    ]
+
+    chunk_model = ChunkModel(
+        db_client=request.app.db_client
+    )
+
+    no_records = await chunk_model.insert_many_chunks(chunks=file_chunks_records)
+
+    return no_records

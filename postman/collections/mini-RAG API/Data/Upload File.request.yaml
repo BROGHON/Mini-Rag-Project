@@ -1,6 +1,6 @@
 $kind: http-request
 method: POST
-url: "{{baseUrl}}/api/v1/data/upload/1"
+url: "{{baseUrl}}/api/v1/data/upload/{{project_id}}"
 description: Upload a file for a specific project. The file is validated for allowed types and max size.
 order: 1000
 body:
@@ -17,5 +17,5 @@ scripts:
       });
 
       pm.test("Response is Internal Server Error", function () {
-          pm.response.to.have.body("Internal Server Error");
+          pm.expect(pm.response.text()).to.include("Internal Server Error");
       });

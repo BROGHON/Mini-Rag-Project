@@ -84,6 +84,7 @@ async def process_endpoint(
     file_id = process_request.file_id
     chunk_size = process_request.chunk_size
     overlap_size = process_request.overlap_size
+    do_reset = process_request.do_reset
 
     project_model = ProjectModel(
         db_client=request.app.db_client
@@ -92,6 +93,8 @@ async def process_endpoint(
     project = await project_model.get_project_or_create_one(
         project_id=project_id
     )
+
+
 
 
     process_controller = ProcessController(project_id=project_id)
@@ -122,13 +125,22 @@ async def process_endpoint(
 
         )
 
-        for chunk in enumerate(file_chunks)
+        for i, chunk in enumerate(file_chunks)
     ]
-
     chunk_model = ChunkModel(
         db_client=request.app.db_client
     )
+    
+    if do_reset == 1:
+        _ = await chunk_model.delete_chunks_by_project_id(
+            project_id=project_id
+        )
 
     no_records = await chunk_model.insert_many_chunks(chunks=file_chunks_records)
 
-    return no_records
+    return JSONResponse(
+                content={
+                    "signal": ResponseSignal.PROCESSING_SUCCESS.value,
+                    "inserted_chunks":no_records
+                }
+            )

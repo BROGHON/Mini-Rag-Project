@@ -1,5 +1,20 @@
 $kind: http-request
-description: ""
-url: ""
-method: GET
+url: "{{baseUrl}}/api/v1/data/upload/1"
+method: POST
+body:
+  type: formdata
+  content:
+    - type: file
+      key: file
+      src: X:/Ai/Projects_folder/mymini-Rag-Project/src/assets/test-upload.txt
+scripts:
+  - type: afterResponse
+    code: |
+      pm.test("Status code is 500", function () {
+          pm.response.to.have.status(500);
+      });
+
+      pm.test("Response is Internal Server Error", function () {
+          pm.response.to.have.body("Internal Server Error");
+      });
 order: 2766481292001279

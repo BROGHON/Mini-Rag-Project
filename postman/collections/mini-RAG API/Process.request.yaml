@@ -1,4 +1,13 @@
 $kind: http-request
-url: ""
-method: GET
+url: '{{baseUrl}}/api/v1/data/process/1'
+method: POST
 order: 2156467582926847
+body:
+  type: json
+  content: |-
+    {
+        "file_id": "4f8wje0vx72e_test_upload.txt",
+        "chunk_size": 400,
+        "overlap_size": 20,
+        "do_reset": 1
+    }

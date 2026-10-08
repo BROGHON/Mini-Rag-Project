@@ -11,9 +11,9 @@ class ProjectModel(BaseDataModel):
 
     @classmethod
     async def create_instance(cls, db_client:object):
-        isinstance = cls(db_client)
-        await isinstance.init_collection()
-        return isinstance
+        instance = cls(db_client)
+        await instance.init_collection()
+        return instance
 
 
     async def init_collection (self):
@@ -37,8 +37,8 @@ class ProjectModel(BaseDataModel):
             project.dict(by_alias=True, exclude_unset=True)
         )
 
-        project._id = result.inserted_id
-        
+        project.id = result.inserted_id
+
         return project
 
     async def get_project_or_create_one(self, project_id: str):

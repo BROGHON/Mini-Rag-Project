@@ -16,7 +16,7 @@ class ProcessController(BaseController):
             project_id=project_id
         )
     def get_file_extension(self, file_id: str):
-        return os.path.splitext(file_id)[-1]
+        return os.path.splitext(file_id)[-1].lower()
 
     def get_file_loader (self, file_id: str):
 
@@ -34,9 +34,12 @@ class ProcessController(BaseController):
 
         return None
     
-    def get_file_content(self, file_id:str):
-
+    def get_file_content(self, file_id: str):
         loader = self.get_file_loader(file_id=file_id)
+
+        if loader is None:
+            return None
+
         return loader.load()
 
     def process_file_content(self, file_content: list, file_id:str,

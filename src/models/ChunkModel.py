@@ -14,9 +14,9 @@ class ChunkModel(BaseDataModel):
 
     @classmethod
     async def create_instance(cls, db_client:object):
-        isinstance = cls(db_client)
-        await isinstance.init_collection()
-        return isinstance
+        instance = cls(db_client)
+        await instance.init_collection()
+        return instance
 
     async def init_collection (self):
         all_collections = await self.db_client.list_collection_names()

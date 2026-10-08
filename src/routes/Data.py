@@ -66,7 +66,7 @@ async def upload_data(request:Request, project_id: str,file: UploadFile,
         return JSONResponse(
             status_code=status.HTTP_400_BAD_REQUEST, 
             content={
-                "signal": ResponseSignal.FILE_UPLOADED_FAILED
+                "signal": ResponseSignal.FILE_UPLOADED_FAILED.value
             }
         )
 
@@ -78,11 +78,11 @@ async def upload_data(request:Request, project_id: str,file: UploadFile,
     asset_resource = Asset(
         asset_project_id=project.id,
         asset_type=AssetTypeEnum.FILE.value,
-        asset_name=file.filename,
+        asset_name=file_id,
         asset_size=os.path.getsize(file_path),
         asset_config={
             "file_path": file_path,
-            "file_id": file_id
+            "file_id": file_id,
         }
     ) 
 
@@ -91,9 +91,10 @@ async def upload_data(request:Request, project_id: str,file: UploadFile,
     return JSONResponse(
             content={
                 "signal": ResponseSignal.FILE_UPLOADED_SUCCESS.value,
-                "file_id":str(asset_record.id),
+                "file_id":file_id,
+                "asset_id": str(asset_record.id)
             }
-        )
+        )   
 
 @data_router.post("/process/{project_id}")
 async def process_endpoint(
@@ -116,11 +117,15 @@ async def process_endpoint(
     )
 
 
-
-
     process_controller = ProcessController(project_id=project_id)
 
     file_content = process_controller.get_file_content(file_id=file_id)
+
+    if file_content is None:
+        return JSONResponse(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            content={"signal": ResponseSignal.FILE_TYPE_NOT_SUPPORTED.value},
+        )
 
     file_chunks = process_controller.process_file_content(
         file_content=file_content,

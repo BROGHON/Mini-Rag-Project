@@ -7,3 +7,5 @@ aiofiles == 25.1.0
 langchain == 1.4.2
 pymupdf == 1.28.2
 Motor == 3.7.1
+langchain-community
+langchain-text-splitters

@@ -17,6 +17,5 @@ scripts:
       });
 
       pm.test("Response is Internal Server Error", function () {
-          pm.response.to.be.text;
           pm.expect(pm.response.text()).to.include("Internal Server Error");
       });

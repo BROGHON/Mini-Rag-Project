@@ -1,12 +1,12 @@
 services:
   mongodb:
-    image: mongo:7.0-jammy
+    image: mongo:8.3
     container_name: mongodb
     ports:
       - "27007:27017"
 
     volumes:
-      - mongodata:/data/db
+      - mongodb_data:/data/db
     
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
@@ -16,10 +16,10 @@ services:
     networks:
       - backend
 
-    restart: always
+    restart: unless-stopped
 
 volumes:
-  mongodata:
+  mongodb_data:
 
 networks:
   backend:

@@ -9,3 +9,4 @@ pymupdf == 1.28.2
 Motor == 3.7.1
 langchain-community
 langchain-text-splitters
+openai == 1.35.13
